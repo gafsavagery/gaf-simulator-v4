@@ -1,322 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GAF Sales Trainer</title>
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
+Loading...
+GAF Sales Trainer
+Tristan Steckler Framework · Itai Sales Process
+Anthropic API Key
+sk-ant-api03-...
+Not set
+ Remember in this browser
+ElevenLabs API Key (optional — enables voice)
+sk_...
+Not set
+ Remember in this browser
+Session Mode
+⚡
+Fresh Session
+Pick avatar and start new
+🔄
+Replay Real Call
+Upload transcript to redo
+Select Avatar
+Appointment Type
+Inbound AdSaw content, booked themselves
+ReferralSomeone they trust sent them
+Outbound / DMYou reached out first
+Event / PodcastHeard you speak
+In-Person ColdCold approach in person
+Prospect Type
+A-Type Decisive. Operator brain. High ego — chest-puff is the mask. Justifies instead of externalizes. "Already tried it." Hides behind expertise. Thinks they don't need you.
+B-Type Indecisive. Overthinker. Externalizes everything — spouse, money, time, family. Uses spouse as a shield. Doesn't take ownership. Sold by emotional pain and identity-gap work.
+Session Focus
+Rapport + IntroFrame & agenda
+End OutcomeGoal clarity
+Not ServingGap setup
+TimeframeDuration anchor
+Limiting BeliefsWhy not fixed
+Internal/ExternalOwnership shift
+Core FearClarify the fear
+Reframe FearFeed the doubt
+Cost of FearWhat it cost them
+Future ConsequenceFuture pace fear
+Visualize 2.0New identity
+Future Pace 2.0New life picture
+Pre-Pitch TeardownWhat changes
+Ideal ProgramWhat they need
+PitchPresent solution
+Get CertaintyConfidence check
+ObjectionsHandle & close
+Full CallIntro → Close
+Start Session →
+Phases
+Total Time
+00:00
+This Phase
+00:00
+⏸ Pause
+—
+—
+Rapport
+—
+End & Score →
+Question Framework
+×
+🎧
+Phase: — — —
+🎤 
+Type your message or use mic...
+ ↑
+Voice Off
 
-<div class="loading" id="loader"><div class="spinner"></div><div class="loading-txt" id="loader-txt">Loading...</div></div>
-<div class="toast" id="toast"></div>
-
-<!-- ═══ SETUP ══════════════════════════════════════════════ -->
-<div class="screen active" id="setup">
-  <div class="logo"><div class="logo-diamond"></div><div class="logo-text">GAF Sales Trainer</div></div>
-  <div class="logo-sub">Tristan Steckler Framework · Itai Sales Process</div>
-
-  <div class="sec">
-    <div class="sec-label">Anthropic API Key</div>
-    <div class="api-row">
-      <input class="api-input" id="keyInput" type="password" placeholder="sk-ant-api03-..." oninput="onKey(this.value)">
-      <div class="api-badge" id="keyBadge">Not set</div>
-    </div>
-    <div class="remember-row">
-      <input type="checkbox" id="rememberCb" onchange="onRemember(this.checked)">
-      <label for="rememberCb" style="cursor:pointer">Remember in this browser</label>
-      <span class="saved-note" id="savedNote" style="display:none">✓ Saved</span>
-    </div>
-  </div>
-
-  <div class="sec">
-    <div class="sec-label">ElevenLabs API Key <span style="color:var(--t3);font-size:9px;text-transform:none;letter-spacing:0">(optional — enables voice)</span></div>
-    <div class="api-row">
-      <input class="api-input" id="elKeyInput" type="password" placeholder="sk_..." oninput="onElKey(this.value)">
-      <div class="api-badge" id="elKeyBadge">Not set</div>
-    </div>
-    <div class="remember-row">
-      <input type="checkbox" id="elRememberCb" onchange="onElRemember(this.checked)">
-      <label for="elRememberCb" style="cursor:pointer">Remember in this browser</label>
-      <span class="saved-note" id="elSavedNote" style="display:none">✓ Saved</span>
-    </div>
-  </div>
-
-  <div class="sec">
-    <div class="sec-label">Session Mode</div>
-    <div class="mode-tabs">
-      <div class="mode-tab active" id="mode-fresh" onclick="setMode('fresh')">
-        <div class="mt-icon">⚡</div>
-        <div class="mt-title">Fresh Session</div>
-        <div class="mt-sub">Pick avatar and start new</div>
-      </div>
-      <div class="mode-tab" id="mode-replay" onclick="setMode('replay')">
-        <div class="mt-icon">🔄</div>
-        <div class="mt-title">Replay Real Call</div>
-        <div class="mt-sub">Upload transcript to redo</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FRESH SESSION OPTIONS -->
-  <div id="fresh-options">
-    <div class="sec">
-      <div class="sec-label">Select Avatar</div>
-      <div class="av-grid" id="avGrid"></div>
-    </div>
-    <div class="sec">
-      <div class="sec-label">Appointment Type</div>
-      <div class="pill-row" id="srcRow">
-        <div class="pill" data-src="inbound-ad" onclick="selPill(this,'src')"><span class="pl">Inbound Ad</span><span class="ps">Saw content, booked themselves</span></div>
-        <div class="pill" data-src="referral" onclick="selPill(this,'src')"><span class="pl">Referral</span><span class="ps">Someone they trust sent them</span></div>
-        <div class="pill" data-src="outbound" onclick="selPill(this,'src')"><span class="pl">Outbound / DM</span><span class="ps">You reached out first</span></div>
-        <div class="pill" data-src="event" onclick="selPill(this,'src')"><span class="pl">Event / Podcast</span><span class="ps">Heard you speak</span></div>
-        <div class="pill" data-src="cold-approach" onclick="selPill(this,'src')"><span class="pl">In-Person Cold</span><span class="ps">Cold approach in person</span></div>
-      </div>
-    </div>
-    <div class="sec">
-      <div class="sec-label">Prospect Type</div>
-      <div class="type-row" id="typeRow">
-        <div class="type-btn" data-type="A" onclick="selType(this,'A')">
-          <span class="tl">A-Type</span>
-          <span class="td">Decisive. Operator brain. High ego — chest-puff is the mask. Justifies instead of externalizes. "Already tried it." Hides behind expertise. Thinks they don't need you.</span>
-        </div>
-        <div class="type-btn" data-type="B" onclick="selType(this,'B')">
-          <span class="tl">B-Type</span>
-          <span class="td">Indecisive. Overthinker. Externalizes everything — spouse, money, time, family. Uses spouse as a shield. Doesn't take ownership. Sold by emotional pain and identity-gap work.</span>
-        </div>
-      </div>
-    </div>
-    <div class="sec">
-      <div class="sec-label">Session Focus</div>
-      <div class="focus-grid" id="focusGrid">
-        <div class="focus-btn" data-focus="ph_rapport" onclick="selFocus(this)"><span class="fl">Rapport + Intro</span>Frame &amp; agenda</div>
-        <div class="focus-btn" data-focus="ph_end_outcome" onclick="selFocus(this)"><span class="fl">End Outcome</span>Goal clarity</div>
-        <div class="focus-btn" data-focus="ph_current_not_serving" onclick="selFocus(this)"><span class="fl">Not Serving</span>Gap setup</div>
-        <div class="focus-btn" data-focus="ph_timeframe" onclick="selFocus(this)"><span class="fl">Timeframe</span>Duration anchor</div>
-        <div class="focus-btn" data-focus="ph_limiting_beliefs" onclick="selFocus(this)"><span class="fl">Limiting Beliefs</span>Why not fixed</div>
-        <div class="focus-btn" data-focus="ph_internal_external" onclick="selFocus(this)"><span class="fl">Internal/External</span>Ownership shift</div>
-        <div class="focus-btn" data-focus="ph_core_fear" onclick="selFocus(this)"><span class="fl">Core Fear</span>Clarify the fear</div>
-        <div class="focus-btn" data-focus="ph_reframe_fear" onclick="selFocus(this)"><span class="fl">Reframe Fear</span>Feed the doubt</div>
-        <div class="focus-btn" data-focus="ph_costs_fear" onclick="selFocus(this)"><span class="fl">Cost of Fear</span>What it cost them</div>
-        <div class="focus-btn" data-focus="ph_future_consequence" onclick="selFocus(this)"><span class="fl">Future Consequence</span>Future pace fear</div>
-        <div class="focus-btn" data-focus="ph_visualize_identity" onclick="selFocus(this)"><span class="fl">Visualize 2.0</span>New identity</div>
-        <div class="focus-btn" data-focus="ph_future_pace_identity" onclick="selFocus(this)"><span class="fl">Future Pace 2.0</span>New life picture</div>
-        <div class="focus-btn" data-focus="ph_pre_pitch_teardown" onclick="selFocus(this)"><span class="fl">Pre-Pitch Teardown</span>What changes</div>
-        <div class="focus-btn" data-focus="ph_ideal_program" onclick="selFocus(this)"><span class="fl">Ideal Program</span>What they need</div>
-        <div class="focus-btn" data-focus="ph_pitch" onclick="selFocus(this)"><span class="fl">Pitch</span>Present solution</div>
-        <div class="focus-btn" data-focus="ph_certainty" onclick="selFocus(this)"><span class="fl">Get Certainty</span>Confidence check</div>
-        <div class="focus-btn" data-focus="ph_objections" onclick="selFocus(this)"><span class="fl">Objections</span>Handle &amp; close</div>
-        <div class="focus-btn sel" data-focus="full" onclick="selFocus(this)"><span class="fl">Full Call</span>Intro → Close</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- REPLAY OPTIONS -->
-  <div id="replay-options" style="display:none">
-    <div class="sec">
-      <div class="sec-label">Upload Call Transcript</div>
-      <div class="upload-zone" id="uploadZone">
-        <input type="file" id="transcriptFile" accept=".txt,.doc,.docx,.pdf,.md,.vtt" onchange="handleFileUpload(this)">
-        <div class="upload-icon">📄</div>
-        <div class="upload-title">Drop transcript here or click to browse</div>
-        <div class="upload-sub">.txt · .md · .vtt · .pdf · .doc · .docx accepted</div>
-      </div>
-      <div id="uploadPreview" style="display:none">
-        <div class="upload-preview" id="previewContent"></div>
-        <div style="margin-top:8px;font-size:10px;color:var(--green)">✓ Transcript loaded — AI will fully analyze and recreate this prospect</div>
-      </div>
-    </div>
-    <div class="sec" id="replayTypeSec" style="display:none">
-      <div class="sec-label">Re-attempt Type</div>
-      <div class="type-row" id="replayTypeRow">
-        <div class="type-btn" data-type="same" onclick="selReplayType(this,'same')">
-          <span class="tl" style="color:var(--t2)">Same Prospect</span>
-          <span class="td">Match the original call exactly — same resistance patterns</span>
-        </div>
-        <div class="type-btn" data-type="harder" onclick="selReplayType(this,'harder')">
-          <span class="tl" style="color:var(--amber)">Push Harder</span>
-          <span class="td">More resistance, less cooperative — stress test your improvements</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="config-summary" id="cfgSummary" style="display:none">
-    <div class="ci"><div class="ck">Mode</div><div class="cv" id="s-mode">Fresh</div></div>
-    <div class="ci"><div class="ck">Avatar</div><div class="cv" id="s-av">—</div></div>
-    <div class="ci"><div class="ck">Appointment</div><div class="cv" id="s-src">—</div></div>
-    <div class="ci"><div class="ck">Type</div><div class="cv" id="s-type">—</div></div>
-    <div class="ci"><div class="ck">Focus</div><div class="cv" id="s-focus">Full Call</div></div>
-  </div>
-
-  <button class="start-btn" id="startBtn" onclick="startSession()" disabled>Start Session →</button>
-</div>
-
-<!-- ═══ ROLEPLAY ═══════════════════════════════════════════ -->
-<div class="screen" id="roleplay">
-  <div class="sidebar">
-    <div class="sb-logo">Phases</div>
-    <div id="phList"></div>
-    <div class="timer-box">
-      <div class="tl">Total Time</div><div class="tv" id="timerDisp">00:00</div>
-      <div class="ptl">This Phase</div><div class="ptv" id="phTimerDisp">00:00</div>
-      <div class="timer-btns">
-        <div class="tbtn" id="pauseBtn" onclick="togglePause()">⏸ Pause</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="chat-main">
-    <div class="topbar">
-      <div><div class="p-name" id="pName">—</div><div class="p-meta" id="pMeta">—</div></div>
-      <div class="topbar-r">
-        <div class="ph-badge" id="phBadge">Rapport</div>
-        <div class="type-badge" id="typeBadge">—</div>
-        <button class="end-btn" onclick="endSession()">End &amp; Score →</button>
-      </div>
-    </div>
-
-    <div class="replay-banner" id="replayBanner" style="display:none">
-      <div class="replay-badge">🔄 REPLAY MODE</div>
-      <div class="replay-info" id="replayInfo">—</div>
-    </div>
-
-    <div class="qf-wrap" id="qfWrap">
-      <div class="qf-inner">
-        <div class="qf-hdr">
-          <div class="qf-lbl" id="qfLbl">Question Framework</div>
-          <button class="qf-close" onclick="toggleQF(false)">×</button>
-        </div>
-        <div id="qfContent"></div>
-      </div>
-    </div>
-
-    <button class="qf-fab" id="qfFab" onclick="toggleQF()">🎧</button>
-
-    <div class="chat-msgs" id="chatMsgs">
-      <div class="typing" id="typing">
-        <div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>
-      </div>
-    </div>
-
-    <div class="input-area">
-      <div class="ph-hint">Phase: <span id="phHintName">—</span> — <span id="phHintDesc" style="color:var(--t3)">—</span></div>
-      <div class="input-row">
-        <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="Click to speak">🎤</button>
-        <textarea class="chat-input" id="chatInput" placeholder="Type your message or use mic..." rows="1"
-          onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendMsg()">↑</button>
-      </div>
-      <div class="voice-row">
-        <div class="voice-toggle" id="voiceToggle" onclick="toggleVoice()">
-          <div class="voice-toggle-dot"></div>
-          <span id="voiceToggleLbl">Voice Off</span>
-        </div>
-        <select class="voice-select" id="voiceSelect" onchange="onVoiceChange(this.value)">
-          <option value="21m00Tcm4TlvDq8ikWAM">Rachel — Calm, composed, professional</option>
-          <option value="AZnzlk1XvdvUeBnXmlld">Domi — Direct, confident, no-nonsense</option>
-          <option value="EXAVITQu4vr4xnSDxMaL">Bella — Warm, conversational, open</option>
-          <option value="ErXwobaYiN019PkySvjV">Antoni — Measured, thoughtful, analytical</option>
-          <option value="VR6AewLTigWG4xSOukaG">Arnold — Authoritative, commanding, A-type</option>
-          <option value="pNInz6obpgDQGcFmaJgB">Adam — Grounded, direct, no fluff</option>
-          <option value="yoZ06aMxZJJ28mfd3POQ">Sam — Relaxed, friendly, conversational</option>
-          <option value="TxGEqnHWrfWFTfGW9XjX">Josh — Warm, emotive, opens up easily</option>
-          <option value="g5CIjZEefAph4nQFvHAz">Ethan — Nervous energy, scattered, B-type feel</option>
-          <option value="ThT5KcBeYPX3keUQqHPh">Dorothy — Measured skeptic, walls up, analytical</option>
-        </select>
-      </div>
-      <button class="adv-btn" onclick="advPhase()">✓ Phase complete — advance to next →</button>
-    </div>
-
-    <div class="speaking-indicator" id="speakingIndicator">
-      <div class="speak-dot"></div><div class="speak-dot"></div><div class="speak-dot"></div>
-      <span>Prospect speaking...</span>
-    </div>
-
-    <div class="intel-hide-btn" id="intelHideBtn" onclick="toggleIntel()">‹</div>
-  </div>
-
-  <div class="intel" id="intelPanel">
-    <div>
-      <div class="intel-title">Live Metrics</div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px">
-        <div class="intel-bar"><div class="ibl"><span class="lb">Trust</span><span class="vl" id="mTrust">—</span></div><div class="itrack"><div class="ifill" id="fTrust" style="width:0%;background:var(--green)"></div></div></div>
-        <div class="intel-bar"><div class="ibl"><span class="lb">Belief Shift</span><span class="vl" id="mBelief">—</span></div><div class="itrack"><div class="ifill" id="fBelief" style="width:0%;background:var(--amber)"></div></div></div>
-        <div class="intel-bar"><div class="ibl"><span class="lb">Ego Down</span><span class="vl" id="mEgo">—</span></div><div class="itrack"><div class="ifill" id="fEgo" style="width:0%;background:var(--purple)"></div></div></div>
-        <div class="intel-bar"><div class="ibl"><span class="lb">Urgency</span><span class="vl" id="mUrgency">—</span></div><div class="itrack"><div class="ifill" id="fUrgency" style="width:0%;background:var(--red)"></div></div></div>
-      </div>
-    </div>
-    <div>
-      <div class="intel-title">Talk Ratio</div>
-      <div class="talk-bar" style="margin-top:6px"><div class="talk-you" id="tYou" style="flex:1"></div><div class="talk-them" id="tThem" style="flex:1"></div></div>
-      <div class="talk-lbl"><span id="tYouPct" style="color:var(--amber)">You 50%</span><span id="tThemPct" style="color:var(--blue)">Them 50%</span></div>
-    </div>
-    <div>
-      <div class="intel-title">Checkpoints</div>
-      <div class="ck-section">
-        <div class="ck-section-label">Clarity</div>
-        <div class="tag-list">
-          <div class="tag" id="ck-goal"><div class="tag-light"></div>Goal Named</div>
-          <div class="tag" id="ck-clarity"><div class="tag-light"></div>Clarity Gotten</div>
-          <div class="tag" id="ck-timeframe"><div class="tag-light"></div>Timeframe Locked</div>
-          <div class="tag" id="ck-decisionmaker"><div class="tag-light"></div>Decision Maker</div>
-          <div class="tag" id="ck-priorinvest"><div class="tag-light"></div>Prior Investment</div>
-        </div>
-      </div>
-      <div class="ck-section" style="margin-top:8px">
-        <div class="ck-section-label">Leverage Built</div>
-        <div class="tag-list">
-          <div class="tag" id="ck-internal"><div class="tag-light"></div>Went Internal</div>
-          <div class="tag" id="ck-fear"><div class="tag-light"></div>Core Fear Named</div>
-          <div class="tag" id="ck-cost"><div class="tag-light"></div>Personal Cost</div>
-          <div class="tag" id="ck-futurepace"><div class="tag-light"></div>Future Paced</div>
-          <div class="tag" id="ck-identity"><div class="tag-light"></div>2.0 Identity</div>
-          <div class="tag" id="ck-commitment"><div class="tag-light"></div>Commitment Made</div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div class="intel-title">Live Flags</div>
-      <div class="flag-list" id="flagList"><div class="flag info">Call started — open framework panel 🎧</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ DEBRIEF ════════════════════════════════════════════ -->
-<div class="screen" id="debrief">
-  <div><div class="db-title">Session Debrief</div><div class="db-meta" id="dbMeta">—</div></div>
-  <div><div class="sec-label">Scores</div><div class="score-grid" id="scoreGrid"></div></div>
-  <div>
-    <div class="sec-label">Talk Ratio</div>
-    <div style="background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:14px 16px">
-      <div class="talk-bar" style="height:10px" id="dbTR"><div class="talk-you" style="flex:1"></div><div class="talk-them" style="flex:1"></div></div>
-      <div class="talk-lbl" style="margin-top:6px;font-size:11px" id="dbTRLbl"><span>—</span><span>—</span></div>
-      <div style="font-size:10px;color:var(--t3);margin-top:5px" id="dbTRNote">—</div>
-    </div>
-  </div>
-  <div><div class="sec-label">Phase Breakdown</div><div class="ph-breakdown" id="phBreakdown"></div></div>
-  <div><div class="sec-label">Prospect Tracking</div><div id="ptBlock"></div></div>
-  <div><div class="sec-label">Coach Feedback</div><div class="fb-block"><div class="fb-hdr"><div class="fb-dot" style="background:var(--amber)"></div><div class="fb-hdr-txt">Full Analysis</div></div><div class="fb-body" id="fbBody"></div></div></div>
-  <div><div class="sec-label">Play-by-Play · Key Moments · Improvement Recs</div><div class="line-list" id="lineList"></div></div>
-  <div class="db-actions">
-    <button class="btn-sec" onclick="showScreen('setup')">← New Session</button>
-    <button class="btn-sec" onclick="saveSession(window.__lastScores)" style="border-color:var(--amber);color:var(--amber)">💾 Save Session</button>
-    <button class="btn-pri" onclick="replaySession()">Replay Same Config →</button>
-  </div>
-</div>
-
-<!-- ═══ SCRIPTS (order matters) ════════════════════════════ -->
-<script src="js/data.js"></script>
-<script src="js/state.js"></script>
-<script src="js/setup.js"></script>
-<script src="js/voice.js"></script>
-<script src="js/session.js"></script>
-<script src="js/phase.js"></script>
-<script src="js/prospect.js"></script>
-<script src="js/intel.js"></script>
-<script src="js/scoring.js"></script>
-<script src="js/debrief.js"></script>
-
-</body>
-</html>
+Rachel — Calm, composed, professional
+✓ Phase complete — advance to next →
+Prospect speaking...
+‹
+Live Metrics
+Trust—
+Belief Shift—
+Ego Down—
+Urgency—
+Talk Ratio
+You 50%Them 50%
+Checkpoints
+Clarity
+Goal Named
+Clarity Gotten
+Timeframe Locked
+Decision Maker
+Prior Investment
+Leverage Built
+Went Internal
+Core Fear Named
+Personal Cost
+Future Paced
+2.0 Identity
+Commitment Made
+Live Flags
+Call started — open framework panel 🎧
+Session Debrief
+—
+Scores
+Talk Ratio
+——
+—
+Phase Breakdown
+Prospect Tracking
+Coach Feedback
+Full Analysis
+Play-by-Play · Key Moments · Improvement Recs
+← New Session 💾 Save Session Replay Same Config →
