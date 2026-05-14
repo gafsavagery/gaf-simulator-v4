@@ -1,4 +1,4 @@
-# GAF Sales Simulator v2
+# GAF Sales Simulator v4
 
 Private sales training simulator built on the Itai 18-phase sales framework with Tristan Steckler coaching voice.
 
